@@ -1,0 +1,16 @@
+预处理:
+python3 preprocess.py
+训练word2vec词向量：
+./third_party/word2vec -train ./data/cws-v2-data/chars.txt -output ./data/cws-v2-data/char_vec.txt -size 100 -sample 1e-4 -negative 0 -hs 1 -min-count 3
+训练：
+python3 -m sycws_folder.sycws --train_prefix ./data/cws-v2-data/train --eval_prefix ./data/cws-v2-data/eval --vocab_file ./data/cws-v2-data/vocab.txt --out_dir ./data/cws-v2-data/model --model CNN-CRF --embed_file ./data/cws-v2-data/char_vec.txt --eval_gold_file ./data/cws-v2-data/eval_gold.txt
+测试（分两种）：
+##1.用户输入返回结果的：
+###python3 -m sycws_folder.sycws --vocab_file ./data/cws-v2-data/vocab.txt --out_dir ./data/cws-v2-data/model/best_Fvalue --inference_output_file ./data/cws-v2-data/result_input.txt
+
+2.将需要分词的句子放在测试文件中：
+python3 -m sycws_folder.sycws --vocab_file ./data/cws-v2-data/vocab.txt --out_dir ./data/cws-v2-data/model/best_Fvalue --inference_input_file ./data/cws-v2-data/test.txt --inference_output_file ./data/cws-v2-data/result.txt
+
+
+评价指标：
+/home/huawei/python3/bin/python3 PRF_SCORE.py './data/cws-v2-data/result_2.txt' './data/cws-v2-data/gold_2.txt'
